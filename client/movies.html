@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieHub - Browse Movies</title>
+    <meta name="description" content="Browse and discover your next favorite movie on MovieHub. Filter by genre, year, and rating.">
+
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="MovieHub - Browse Movies">
+    <meta property="og:description" content="Browse and discover your next favorite movie on MovieHub. Filter by genre, year, and rating.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630">
+    <meta property="og:url" content="https://www.moviehub.com/movies">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Banner Ad -->
+    <section class="ad-space top-banner">
+        <div class="ad-placeholder">Top Banner Ad</div>
+    </section>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">MovieHub</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movies.html">Movies</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Top Section -->
+    <section class="top-section">
+        <h1>Browse Movies</h1>
+        <p>Find your next favorite movie from our extensive collection.</p>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="filter-bar">
+        <select id="genre-filter">
+            <option value="">Genre</option>
+            <option value="Action">Action</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Horror">Horror</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+        </select>
+        <select id="year-filter">
+            <option value="">Year</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+        </select>
+        <select id="rating-filter">
+            <option value="">Rating</option>
+            <option value="9">9+</option>
+            <option value="8">8+</option>
+            <option value="7">7+</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search movies...">
+    </section>
+
+    <!-- Ad Between Sections -->
+    <section class="ad-space between-sections">
+        <div class="ad-placeholder">Ad Between Sections</div>
+    </section>
+
+    <!-- Movies Grid -->
+    <section class="movies-grid" id="movies-container">
+        <!-- Movie cards will be dynamically rendered here -->
+    </section>
+
+    <!-- Pagination -->
+    <section class="pagination" id="pagination-container">
+        <!-- Previous/Next buttons will be dynamically rendered here -->
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Footer Banner Ad -->
+        <div class="ad-space footer-banner">
+            <div class="ad-placeholder">Footer Banner Ad</div>
+        </div>
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        const moviesContainer = document.getElementById('movies-container');
+        const genreFilter = document.getElementById('genre-filter');
+        const yearFilter = document.getElementById('year-filter');
+        const ratingFilter = document.getElementById('rating-filter');
+        const searchInput = document.getElementById('search-input');
+        const paginationContainer = document.createElement('div');
+        paginationContainer.id = 'pagination-container';
+        moviesContainer.after(paginationContainer);
+
+        const MOVIES_PER_PAGE = 10;
+        let currentPage = 1;
+        let filteredMovies = [];
+
+        const fetchMovies = async () => {
+            try {
+                const response = await fetch('/api/movies');
+                const movies = await response.json();
+                return movies;
+            } catch (error) {
+                console.error('Error fetching movies:', error);
+                return [];
+            }
+        };
+
+        const createMovieCard = (movie) => {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('movie-card');
+
+            movieCard.innerHTML = `
+                <img src="${movie.poster}" alt="${movie.title}">
+                <div class="movie-info">
+                    <h3>${movie.title}</h3>
+                    <p>Year: ${movie.year}</p>
+                    <p>Rating: ${movie.rating}</p>
+                    <button class="view-details" data-id="${movie._id}">View Details</button>
+                </div>
+            `;
+
+            movieCard.querySelector('.view-details').addEventListener('click', () => {
+                window.location.href = `movie-details.html?id=${movie._id}`;
+            });
+
+            return movieCard;
+        };
+
+        const renderMovies = (moviesToRender) => {
+            moviesContainer.innerHTML = '';
+            moviesToRender.forEach(movie => {
+                const movieCard = createMovieCard(movie);
+                moviesContainer.appendChild(movieCard);
+            });
+
+            // Reinitialize ad zones after rendering
+            if (typeof reinitializeAds === 'function') {
+                reinitializeAds();
+            }
+        };
+
+        const updateMovies = () => {
+            const startIndex = (currentPage - 1) * MOVIES_PER_PAGE;
+            const endIndex = startIndex + MOVIES_PER_PAGE;
+            const moviesToRender = filteredMovies.slice(startIndex, endIndex);
+            renderMovies(moviesToRender);
+        };
+
+        const filterMovies = async () => {
+            const genre = genreFilter.value;
+            const year = yearFilter.value;
+            const rating = ratingFilter.value;
+            const search = searchInput.value.toLowerCase();
+
+            const movies = await fetchMovies();
+            filteredMovies = movies.filter(movie => {
+                return (
+                    (genre === '' || movie.genre.toLowerCase() === genre.toLowerCase()) &&
+                    (year === '' || movie.year.toString() === year) &&
+                    (rating === '' || movie.rating >= parseFloat(rating)) &&
+                    (search === '' || movie.title.toLowerCase().includes(search))
+                );
+            });
+
+            currentPage = 1;
+            updateMovies();
+        };
+
+        // Initial fetch and render
+        filterMovies();
+
+        // Event listeners for filters
+        genreFilter.addEventListener('change', filterMovies);
+        yearFilter.addEventListener('change', filterMovies);
+        ratingFilter.addEventListener('change', filterMovies);
+        searchInput.addEventListener('input', filterMovies);
+    </script>
+</body>
+</html>

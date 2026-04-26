@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watch Movie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --panel:#141414;
+      --text:#f5f5f7;
+      --muted:rgba(245,245,247,.68);
+      --border:rgba(255,255,255,.08);
+      --red:#e50914;
+      --red2:#b20710;
+      --shadow:0 24px 70px rgba(0,0,0,.42);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+
+    body{
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 500px at 15% 8%, rgba(229,9,20,.16), transparent 55%),
+        radial-gradient(900px 450px at 90% 20%, rgba(255,42,42,.08), transparent 60%),
+        var(--bg);
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page{
+      width:min(1200px, 95vw);
+      margin:0 auto;
+      padding:22px 0 56px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .backBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+      transition:.18s ease;
+    }
+
+    .backBtn:hover{
+      border-color:rgba(229,9,20,.35);
+      transform:translateY(-1px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      opacity:.96;
+    }
+
+    .logo{
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      background:linear-gradient(135deg, var(--red), #ff5a36);
+      box-shadow:0 16px 34px rgba(229,9,20,.22);
+      flex-shrink:0;
+    }
+
+    .hero{
+      position:relative;
+      min-height:340px;
+      border:1px solid var(--border);
+      border-radius:24px;
+      overflow:hidden;
+      background:#111;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .heroPoster{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter:brightness(.42);
+    }
+
+    .heroOverlay{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.62) 42%, rgba(0,0,0,.28) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.78) 100%);
+    }
+
+    .heroContent{
+      position:relative;
+      z-index:2;
+      width:min(780px, 100%);
+      min-height:340px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      padding:34px 28px 26px;
+    }
+
+    .movieTitle{
+      margin:0 0 12px;
+      font-size:clamp(30px, 4vw, 50px);
+      line-height:1.02;
+      font-weight:900;
+      letter-spacing:.2px;
+      max-width:780px;
+    }
+
+    .heroMeta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .playerWrap{
+      margin-top:18px;
+      border:1px solid var(--border);
+      border-radius:22px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:var(--shadow);
+    }
+
+    video{
+      width:100%;
+      display:block;
+      background:#000;
+      max-height:75vh;
+    }
+
+    .content{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      border:1px solid var(--border);
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      padding:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.28);
+      min-width:0;
+    }
+
+    .panel h3{
+      margin:0 0 12px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+
+    .descText{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:14px;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+
+    .message{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .listRow{
+      padding:11px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .value{
+      font-size:14px;
+      color:#fff;
+      line-height:1.55;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+
+    @media (max-width: 900px){
+      .page{
+        width:min(94vw, 100%);
+        padding:18px 0 52px;
+      }
+
+      .hero{
+        min-height:300px;
+      }
+
+      .heroContent{
+        min-height:300px;
+        padding:24px 18px 20px;
+      }
+
+      .movieTitle{
+        font-size:clamp(24px, 7vw, 38px);
+      }
+
+      .content{
+        grid-template-columns:1fr;
+      }
+    }
+    .similarPanel{
+  margin-top:18px;
+}
+
+.similarGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+  gap:14px;
+}
+
+.similarCard{
+  position:relative;
+  display:block;
+  overflow:hidden;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:#111;
+  transition:.22s ease;
+}
+
+.similarCard:hover{
+  transform:translateY(-5px) scale(1.03);
+  border-color:rgba(229,9,20,.35);
+}
+
+.similarCard img{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  display:block;
+}
+
+.similarTitle{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:10px;
+  font-size:12px;
+  font-weight:800;
+  background:linear-gradient(transparent, rgba(0,0,0,.9));
+  color:#fff;
+}
+
+.emptySimilar{
+  color:var(--muted);
+  font-size:13px;
+}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <a class="backBtn" href="/index.html">← Back</a>
+
+      <div class="brand">
+        <div class="logo"></div>
+        <div>MovieHub</div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <img id="heroPoster" class="heroPoster" alt="Movie Poster" />
+      <div class="heroOverlay"></div>
+
+      <div class="heroContent">
+        <h1 id="movieTitle" class="movieTitle">Loading...</h1>
+
+        <div class="heroMeta">
+          <span id="ratingPill" class="pill">⭐ 0.0</span>
+          <span id="categoryPill" class="pill">Category</span>
+          <span id="qualityPill" class="pill">HD</span>
+          <span id="yearPill" class="pill">Year</span>
+          <span id="durationPill" class="pill">Duration</span>
+          <span id="viewsPill" class="pill">👁 0</span>
+          <span id="videoStatusPill" class="pill">Checking video...</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="playerSection" class="playerWrap">
+      <video id="player" controls playsinline></video>
+    </section>
+
+    <section class="content">
+      <div class="panel">
+        <h3>About this movie</h3>
+        <p id="aboutText" class="descText">Loading...</p>
+        <div id="playerMsg" class="message"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Movie Details</h3>
+        <div class="list">
+          <div class="listRow">
+            <span class="label">Title</span>
+            <div id="detailsTitle" class="value">Loading...</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Cast</span>
+            <div id="detailsCast" class="value">-</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Rating</span>
+            <div id="detailsRating" class="value">0.0</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Category</span>
+            <div id="detailsCategory" class="value">-</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Quality</span>
+            <div id="detailsQuality" class="value">HD</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Year</span>
+            <div id="detailsYear" class="value">-</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Duration</span>
+            <div id="detailsDuration" class="value">-</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Views</span>
+            <div id="detailsViews" class="value">0</div>
+          </div>
+
+          <div class="listRow">
+            <span class="label">Video Status</span>
+            <div id="detailsVideo" class="value">Checking...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="panel similarPanel">
+  <h3>Similar Movies</h3>
+  <div id="similarGrid" class="similarGrid"></div>
+  <div id="similarEmpty" class="emptySimilar" style="display:none;">No similar movies yet.</div>
+</section>
+  </div>
+
+  <script>
+    const API = "https://moviehub-production-e79e.up.railway.app";
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+
+    const FALLBACK_POSTER =
+      "data:image/svg+xml;charset=utf-8," +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="600">
+          <rect width="100%" height="100%" fill="#111"/>
+          <text x="50%" y="50%" fill="#777" font-size="28" font-family="Arial" text-anchor="middle">
+            No Poster
+          </text>
+        </svg>
+      `);
+
+    function normalizePath(p){
+      return String(p || "").replace(/\\/g, "/").trim();
+    }
+
+    function fileUrl(p){
+      if(!p) return "";
+      const s = normalizePath(p);
+
+      if(s.startsWith("http://") || s.startsWith("https://")) return s;
+      if(s.toLowerCase().includes("fakepath")) return "";
+      if(s.startsWith("/uploads/")) return API + s;
+      if(s.startsWith("uploads/")) return API + "/" + s;
+      if(!s.includes("/")) return API + "/uploads/" + s;
+      if(s.startsWith("/")) return API + s;
+      return API + "/" + s;
+    }
+
+    async function loadMovie(){
+      try{
+        if(!id){
+          document.getElementById("movieTitle").textContent = "Movie not found";
+          document.getElementById("aboutText").textContent = "Missing movie id.";
+          return;
+        }
+
+        const res = await fetch(`${API}/api/movies/${encodeURIComponent(id)}`);
+        const movie = await res.json().catch(() => ({}));
+
+        if(!res.ok){
+          document.getElementById("movieTitle").textContent = "Movie not found";
+          document.getElementById("aboutText").textContent = movie.message || "Failed to load movie.";
+          return;
+        }
+
+        const title = movie.title || "Untitled";
+        const desc = movie.description || "No description available.";
+        const cast = movie.cast || "-";
+        const rating = Number(movie.rating || 0).toFixed(1);
+        const category = movie.category || "Uncategorized";
+        const quality = movie.quality || "HD";
+        const year = movie.year || "-";
+        const duration = movie.duration || "-";
+        const views = Number(movie.views || 0);
+
+        const poster = fileUrl(movie.posterUrl || movie.poster);
+        const backdrop = fileUrl(movie.backdrop || movie.backdropUrl);
+        const heroImage = backdrop || poster || FALLBACK_POSTER;
+        const video = fileUrl(movie.videoUrl || movie.video);
+
+        document.title = `${title} • MovieHub`;
+
+        document.getElementById("movieTitle").textContent = title;
+        document.getElementById("aboutText").textContent = desc;
+
+        document.getElementById("detailsTitle").textContent = title;
+        document.getElementById("detailsCast").textContent = cast;
+        document.getElementById("detailsRating").textContent = rating;
+        document.getElementById("detailsCategory").textContent = category;
+        document.getElementById("detailsQuality").textContent = quality;
+        document.getElementById("detailsYear").textContent = year;
+        document.getElementById("detailsDuration").textContent = duration;
+        document.getElementById("detailsViews").textContent = views;
+
+        document.getElementById("ratingPill").textContent = `⭐ ${rating}`;
+        document.getElementById("categoryPill").textContent = category;
+        document.getElementById("qualityPill").textContent = quality;
+        document.getElementById("yearPill").textContent = year;
+        document.getElementById("durationPill").textContent = duration;
+        document.getElementById("viewsPill").textContent = `👁 ${views}`;
+
+        const heroPoster = document.getElementById("heroPoster");
+        heroPoster.src = heroImage;
+        heroPoster.onerror = () => {
+          heroPoster.src = poster || FALLBACK_POSTER;
+        };
+
+        const player = document.getElementById("player");
+        const msg = document.getElementById("playerMsg");
+        const detailsVideo = document.getElementById("detailsVideo");
+        const videoStatusPill = document.getElementById("videoStatusPill");
+
+        if(video){
+          player.src = video;
+          detailsVideo.textContent = "Available";
+          videoStatusPill.textContent = "Video available";
+          msg.textContent = "";
+
+          let hasCountedView = false;
+
+          player.addEventListener("play", () => {
+            if (hasCountedView) return;
+            hasCountedView = true;
+
+            fetch(`${API}/api/movies/${encodeURIComponent(id)}/view`, {
+              method: "PUT"
+            }).catch(() => {});
+          }, { once: true });
+
+        } else {
+          player.style.display = "none";
+          detailsVideo.textContent = "No video uploaded";
+          videoStatusPill.textContent = "No video";
+          msg.textContent = "This movie does not have a video file yet.";
+        }
+
+      } catch(e){
+        console.error(e);
+        document.getElementById("movieTitle").textContent = "Error";
+        document.getElementById("aboutText").textContent = "Server error while loading movie.";
+      }
+    }
+    async function loadSimilar(){
+  try{
+    const grid = document.getElementById("similarGrid");
+    const empty = document.getElementById("similarEmpty");
+
+    if (!grid || !id) return;
+
+    const res = await fetch(`${API}/api/movies/${encodeURIComponent(id)}/similar`);
+    const data = await res.json().catch(() => []);
+
+    const movies = Array.isArray(data) ? data : [];
+
+    if (!movies.length){
+      grid.innerHTML = "";
+      if (empty) empty.style.display = "block";
+      return;
+    }
+
+    if (empty) empty.style.display = "none";
+
+    grid.innerHTML = movies.map(movie => {
+      const movieId = movie._id || movie.id;
+      const title = movie.title || "Movie";
+      const poster = fileUrl(movie.poster) || FALLBACK_POSTER;
+
+      return `
+        <a class="similarCard" href="watch.html?id=${encodeURIComponent(movieId)}">
+          <img
+            src="${poster}"
+            alt="${title}"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='${FALLBACK_POSTER}'"
+          >
+          <div class="similarTitle">${title}</div>
+        </a>
+      `;
+    }).join("");
+  }catch(e){
+    console.error("loadSimilar error:", e);
+  }
+}
+
+    loadMovie();
+    loadSimilar();
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MovieHub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+  <div class="brand" id="brandSecret">
+    <div class="logo"></div>
+    <div class="brandText">
+      <div class="brandName">MovieHub</div>
+      <div class="brandTag">Discover & Watch</div>
+    </div>
+  </div>
+
+  <div class="topbarRight">
+    <div class="searchWrap">
+      <span class="searchIcon">🔎</span>
+      <input id="q" class="search" placeholder="Search movies..." autocomplete="off" />
+      <div id="searchSuggestions" class="searchSuggestions" style="display:none;"></div>
+    </div>
+
+    
+  </div>
+</header>
+
+<main class="page">
+    <!-- Featured Hero -->
+    <section id="heroSection" class="heroSection">
+      <img id="heroPoster" class="heroPoster" alt="Featured Movie Poster" />
+      <div class="heroOverlay"></div>
+
+      <div class="heroContent">
+        <span class="heroBadge">Featured</span>
+
+        <h1 id="heroTitle" class="heroTitle">Loading...</h1>
+
+        <div class="heroMeta">
+          <span id="heroRating" class="pill">⭐ 0.0</span>
+          <span id="heroCategory" class="pill">Category</span>
+          <span id="heroQuality" class="pill">HD</span>
+        </div>
+
+        <p id="heroDesc" class="heroDesc">Loading featured movie...</p>
+
+        <div class="heroActions">
+          <a id="heroWatchBtn" class="heroBtn primary" href="#">▶ Watch Now</a>
+          <a class="heroBtn secondary" href="#moviesSection">Browse Movies</a>
+        </div>
+      </div>
+    </section>
+
+    
+
+
+    <!-- Browse Movies -->
+    <section id="moviesSection" class="section">
+      <div class="sectionHead">
+        <h2 class="sectionTitle">Browse Movies</h2>
+        <div class="meta">
+          <span id="count">Loading...</span>
+        </div>
+      </div>
+
+      <div id="categoryFilters" class="categoryFilters">
+        <button class="catBtn active" data-category="All" type="button">All</button>
+        <button class="catBtn" data-category="Action" type="button">Action</button>
+        <button class="catBtn" data-category="Comedy" type="button">Comedy</button>
+        <button class="catBtn" data-category="Drama" type="button">Drama</button>
+        <button class="catBtn" data-category="Horror" type="button">Horror</button>
+        <button class="catBtn" data-category="Sci-Fi" type="button">Sci-Fi</button>
+        <button class="catBtn" data-category="Romance" type="button">Romance</button>
+        <button class="catBtn" data-category="Adventure" type="button">Adventure</button>
+        <button class="catBtn" data-category="Animation" type="button">Animation</button>
+        <button class="catBtn" data-category="Thriller" type="button">Thriller</button>
+        <button class="catBtn" data-category="Uncategorized" type="button">Uncategorized</button>
+      </div>
+
+      <div id="moviesGrid" class="grid"></div>
+      <div id="loadMoreWrap" class="loadMoreWrap">
+  <button id="loadMoreBtn" class="loadMoreBtn" type="button">More Movies</button>
+</div>
+
+      <div id="empty" class="empty" style="display:none;">
+        No movies yet.
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+  <div class="footerInner">
+    <div class="footerLeft">
+      <div class="footerBrand">
+        <div class="footerLogo"></div>
+        <div>
+          <div class="footerTitle">MovieHub</div>
+          <div class="footerSub">Discover & Watch</div>
+        </div>
+      </div>
+      <p class="footerText">
+        Watch trending movies, save your favorites, and enjoy a clean Netflix-style experience.
+      </p>
+    </div>
+
+    <div class="footerRight">
+  <a href="/index.html">Home</a>
+  <a href="/about.html">About</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/terms.html">Terms</a>
+    </div>
+</div>
+  </div>
+
+  <div class="footerBottom">
+    <span>©️ 2026 MovieHub. All rights reserved.</span>
+  </div>
+</footer>
+  
+      </div>
+    </div>
+  </div>
+
+  <script src="movies.js"></script>
+</body>
+</html>
